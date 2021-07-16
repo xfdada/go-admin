@@ -1,0 +1,25 @@
+Server:
+  Model:    debug        #运行模式 debug测试环境  release生产环境
+  Post:     8000         #监听端口
+  ReadTimeout:  60       #
+  WriteTimeout: 60       #
+
+
+
+Mysql:
+  Username:     root    #用户名
+  Password:     root    #密码
+  Host:         127.0.0.1:3306
+  DBName:       blog        #数据库名称
+  TablePrefix:  blog_        #数据库表名前缀
+  Charset:      utf8    #链接字符格式
+  ParseTime:    True
+  MaxIdleConns: 10
+  MaxOpenConns: 30
+
+
+
+JWT:                  #jwt认证令牌
+  Secret:       gowebs
+  Issuer:       xfdada
+  Expire:      7200
