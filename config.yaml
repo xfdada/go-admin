@@ -1,6 +1,6 @@
 Server:
   Model:    debug        #运行模式 debug测试环境  release生产环境
-  Post:     8000         #监听端口
+  Port:     8000         #监听端口
   ReadTimeout:  60       #
   WriteTimeout: 60       #
 

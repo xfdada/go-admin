@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"go-admin/config"
 	"go-admin/global"
-
-	"github.com/gin-gonic/gin"
+	"go-admin/router"
+	"net/http"
+	"time"
 )
 
 func init() {
@@ -13,15 +14,18 @@ func init() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(global.Server.Model)
 }
 
 func main() {
-	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(200, gin.H{"msg": "success"})
-	})
-	r.Run()
+	router := router.NewRouter()
+	s := &http.Server{
+		Addr:           ":" + global.Server.Port,
+		Handler:        router,
+		ReadTimeout:    global.Server.ReadTimeout * time.Second,
+		WriteTimeout:   global.Server.WriteTimeout * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
+	s.ListenAndServe()
 }
 
 func initConfig() error {
@@ -30,6 +34,10 @@ func initConfig() error {
 		return err
 	}
 	err = cfg.ReadConfig("Server", &global.Server)
+	if err != nil {
+		return err
+	}
+	err = cfg.ReadConfig("JWT", &global.JWT)
 	if err != nil {
 		return err
 	}
