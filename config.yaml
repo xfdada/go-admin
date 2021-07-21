@@ -6,6 +6,19 @@ Server:
 
 
 
+Upload:
+  UploadMaxSize:  5     #MB
+  UploadPath:     resource/uploads  #文件上传目录
+  SaveSameFile:   true   #保留相同文件名的文件    
+  Url:            /uploads   
+  AllowExts:     #允许上传文件的后缀名
+    - .jpg
+    - .png
+    - .jpeg
+    - .zip
+    - .xlsx
+    - .doc
+    - .docx
 Mysql:
   Username:     root    #用户名
   Password:     root    #密码

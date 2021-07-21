@@ -6,4 +6,5 @@ var (
 	Server *config.Server
 	Mysql  *config.Mysql
 	JWT    *config.JWT
+	Upload *config.Upload
 )

@@ -1,0 +1,133 @@
+definitions:
+  model.User:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      pwd:
+        type: string
+    type: object
+  v1.User:
+    type: object
+info:
+  contact: {}
+  title: go-admin快速开发示例
+paths:
+  /api/v1/user:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+        "400":
+          description: 请求错误
+        "500":
+          description: 内部错误
+      summary: 获取多条用户信息
+    post:
+      parameters:
+      - description: 用户名
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: 密码
+        in: body
+        name: pwd
+        required: true
+        schema:
+          type: string
+      - description: 邮箱
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+        "400":
+          description: 请求错误
+        "500":
+          description: 内部错误
+      summary: 新增用户信息
+  /api/v1/user/{id}:
+    delete:
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+        "400":
+          description: 请求错误
+        "500":
+          description: 内部错误
+      summary: 删除指定用户信息
+    get:
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+          schema:
+            $ref: '#/definitions/model.User'
+        "500":
+          description: 内部错误
+          schema:
+            $ref: '#/definitions/v1.User'
+      summary: 获取指定用户信息
+    put:
+      parameters:
+      - description: 用户ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 用户名
+        in: body
+        name: name
+        required: true
+        schema:
+          type: string
+      - description: 密码
+        in: body
+        name: pwd
+        required: true
+        schema:
+          type: string
+      - description: 邮箱
+        in: body
+        name: email
+        required: true
+        schema:
+          type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: 成功
+        "400":
+          description: 请求错误
+        "500":
+          description: 内部错误
+      summary: 更新指定用户信息
+swagger: "2.0"
