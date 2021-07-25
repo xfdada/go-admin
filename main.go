@@ -62,6 +62,10 @@ func initConfig() error {
 	if err != nil {
 		return err
 	}
+	err = cfg.ReadConfig("Captcha", &global.Captcha)
+	if err != nil {
+		return err
+	}
 	if port != "" {
 		global.Server.Port = port
 	}

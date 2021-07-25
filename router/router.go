@@ -20,6 +20,7 @@ func NewRouter() *gin.Engine {
 	r.GET("/doc/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.StaticFS("/uploads", http.Dir(global.Upload.UploadPath))
 	r.GET("/api/get_token", v1.GetToken)
+	r.GET("/api/get_capt", v1.GetCapt)
 	r.GET("/", service.Index)
 	r.LoadHTMLGlob("resource/view/**/*")
 	user := v1.NewUser()

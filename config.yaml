@@ -1,6 +1,6 @@
 Server:
   Model:    debug        #运行模式 debug测试环境  release生产环境
-  Port:     8000         #监听端口
+  Port:     8001         #监听端口
   ReadTimeout:  60       #
   WriteTimeout: 60       #
 
@@ -8,7 +8,7 @@ Server:
 
 Upload:
   UploadMaxSize:  5     #MB
-  UploadPath:     resource/uploads  #文件上传目录
+  UploadPath:     resource/uploads/video  #文件上传目录
   SaveSameFile:   true   #保留相同文件名的文件    
   Url:            /uploads   
   AllowExts:     #允许上传文件的后缀名
@@ -30,7 +30,16 @@ Mysql:
   MaxIdleConns: 10
   MaxOpenConns: 30
 
-
+Redis:
+  Addr:         127.0.0.1:6379 #地址
+  Password:                   #密码
+  DB:           0             #数据库
+Captcha:
+  Height:       60    #验证码图片高度
+  Width:        120   #验证码图片宽度
+  Length:       5     #验证码长度
+  MaxSkew:      0.4   #倾斜角度
+  DotCount:     50    #杂点数量
 
 JWT:                  #jwt认证令牌
   Secret:       gowebs
