@@ -58,8 +58,8 @@ func Get(key string) (string, error) {
 }
 
 //查询键是否存在
-func Exists(key string) (bool, error) {
-	ok, err := Redis.Do("EXISTS", key).Bool()
+func Exists(key string) (int64, error) {
+	ok, err := Redis.Exists(key).Result()
 	return ok, err
 }
 

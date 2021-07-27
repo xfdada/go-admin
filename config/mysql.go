@@ -12,7 +12,3 @@ type Mysql struct {
 	MaxOpenConns int
 }
 
-// func (m *Mysql) Dsn() string {
-// 	return m.Username + ":" + m.Password + "@tcp(" + m.Host + ")/" +
-// 		m.DBName + "?charset=" + m.Charset + "&parseTime=" + m.ParseTime + "&loc=Local"
-// }

@@ -1,0 +1,10 @@
+[logger]2021/07/26 06:44:02 loggers.go:21: set Key failed
+[logger]2021/07/26 08:00:27 loggers.go:21: key:value:
+[logger]2021/07/26 08:17:10 loggers.go:21:  Key:  value: 
+[logger]2021/07/26 08:19:02 loggers.go:21:  Key:  value: 
+[logger]2021/07/26 08:23:36 loggers.go:21:  Key: abc123 value: 123
+[logger]2021/07/27 06:21:36 loggers.go:21: 初始化连接数据库失败，错误详情是err:invalid bool value: %!s(bool=true)
+
+[logger]2021/07/27 06:21:36 loggers.go:21: 连接数据库失败，错误详情是err:invalid bool value: %!s(bool=true)
+
+[logger]2021/07/27 09:58:17 loggers.go:21: 插入数据失败Details:invalid connection

@@ -3,7 +3,6 @@ package config
 import (
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"log"
 )
 
 type Config struct {
@@ -54,7 +53,6 @@ func (c *Config) WatchSettingChange() {
 	go func() {
 		c.vp.WatchConfig()
 		c.vp.OnConfigChange(func(in fsnotify.Event) {
-			log.Print("Config file updated.")
 			_ = c.ReloadAllConfig()
 		})
 	}()

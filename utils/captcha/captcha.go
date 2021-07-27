@@ -9,12 +9,6 @@ import (
 	"time"
 )
 
-var Captcha *base64Captcha.Store
-
-func init() {
-
-}
-
 type Store struct {
 	Expiration time.Duration
 	PreKey     string
@@ -22,8 +16,8 @@ type Store struct {
 
 func NewDefaultRedisStore() base64Captcha.Store {
 	return &Store{
-		Expiration: time.Second * 180,
-		PreKey:     "CAPTCHA_",
+		Expiration: time.Second * global.Captcha.Expiration,
+		PreKey:     global.Captcha.PreKey,
 	}
 }
 
@@ -62,6 +56,9 @@ func GetCaptcha() (string, string) {
 	driver := base64Captcha.NewDriverDigit(global.Captcha.Height, global.Captcha.Width, global.Captcha.Length, global.Captcha.MaxSkew, global.Captcha.DotCount)
 	// 生成base64图片
 	store := base64Captcha.DefaultMemStore
+	if global.Captcha.UseRedis {
+		store = NewDefaultRedisStore()
+	}
 	c := base64Captcha.NewCaptcha(driver, store)
 
 	// 获取

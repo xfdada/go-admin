@@ -2,6 +2,7 @@ package v1
 
 import (
 	"fmt"
+	"go-admin/model"
 	_ "go-admin/model"
 	"go-admin/utils/upload"
 	"net/http"
@@ -22,8 +23,14 @@ func NewUser() User {
 //@Failure 500 {object} User "内部错误"
 //@Router /api/v1/user/{id} [get]
 func (u User) Get(c *gin.Context) {
-
-	c.JSON(http.StatusOK, gin.H{"msg": "success"})
+	id := c.Param("id")
+	user := model.NewUser()
+	data,err := user.Get(id)
+	if err != nil{
+		c.JSON(http.StatusOK, gin.H{"msg": "success","data":data})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"msg": "success","data":data})
 }
 
 //@Summary 获取多条用户信息
@@ -34,7 +41,13 @@ func (u User) Get(c *gin.Context) {
 //@Router /api/v1/user [get]
 func (u User) List(c *gin.Context) {
 
-	c.JSON(http.StatusOK, gin.H{"msg": "success"})
+	user := model.NewUser()
+	data,err := user.List()
+	if err != nil{
+		c.JSON(http.StatusOK, gin.H{"msg": "success","data":data})
+		return
+	}
+	c.JSON(http.StatusOK, gin.H{"msg": "success","data":data})
 }
 
 //@Summary 新增用户信息
@@ -47,7 +60,15 @@ func (u User) List(c *gin.Context) {
 //@Failure 500 "内部错误"
 //@Router /api/v1/user [post]
 func (u User) Create(c *gin.Context) {
-
+	name := c.PostForm("name")
+	age := c.PostForm("age")
+	adderss := c.PostForm("address")
+	user := model.NewUser()
+	err := user.Add(name,adderss,age)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"msg": "failed"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"msg": "success"})
 }
 
