@@ -21,6 +21,8 @@ func NewRouter() *gin.Engine {
 	r.StaticFS("/uploads", http.Dir(global.Upload.UploadPath))
 	r.GET("/api/get_token", v1.GetToken)
 	r.GET("/api/get_capt", v1.GetCapt)
+	r.POST("/api/set", v1.SetKey)
+	r.POST("/api/get", v1.GetKey)
 	r.GET("/", service.Index)
 	r.LoadHTMLGlob("resource/view/**/*")
 	user := v1.NewUser()

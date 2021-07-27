@@ -34,10 +34,10 @@ func init() {
 //@version	1.0
 func main() {
 	gin.SetMode(global.Server.Model)
-	router := router.NewRouter()
+	routers := router.NewRouter()
 	s := &http.Server{
 		Addr:           ":" + global.Server.Port,
-		Handler:        router,
+		Handler:        routers,
 		ReadTimeout:    global.Server.ReadTimeout * time.Second,
 		WriteTimeout:   global.Server.WriteTimeout * time.Second,
 		MaxHeaderBytes: 1 << 20,

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"go-admin/utils/captcha"
 	"go-admin/utils/jwts"
+	"go-admin/utils/loggers"
+	"go-admin/utils/redis"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,4 +25,31 @@ func GetCapt(c *gin.Context) {
 		c.JSON(200, gin.H{"id": id, "capt": capt})
 	}
 
+}
+
+func SetKey(c *gin.Context) {
+	key := c.PostForm("key")
+	value := c.PostForm("value")
+	loggers.Logs(" Key: " + key + " value: " + value)
+	err := redis.Set(key, value, 0)
+	if err != nil {
+
+		c.JSON(500, gin.H{"msg": "failed"})
+		return
+	}
+	c.JSON(200, gin.H{"msg": "success"})
+	return
+}
+
+func GetKey(c *gin.Context) {
+	key := c.PostForm("key")
+	ok, err := redis.Get(key)
+
+	if err != nil {
+		loggers.Logs("get Key failed")
+		c.JSON(500, gin.H{"msg": "failed"})
+		return
+	}
+	c.JSON(200, gin.H{"msg": "success", "data": ok})
+	return
 }
