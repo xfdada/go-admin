@@ -25,12 +25,12 @@ func NewUser() User {
 func (u User) Get(c *gin.Context) {
 	id := c.Param("id")
 	user := model.NewUser()
-	data,err := user.Get(id)
-	if err != nil{
-		c.JSON(http.StatusOK, gin.H{"msg": "success","data":data})
+	data, err := user.Get(id)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"msg": "success", "data": data})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"msg": "success","data":data})
+	c.JSON(http.StatusOK, gin.H{"msg": "success", "data": data})
 }
 
 //@Summary 获取多条用户信息
@@ -42,12 +42,12 @@ func (u User) Get(c *gin.Context) {
 func (u User) List(c *gin.Context) {
 
 	user := model.NewUser()
-	data,err := user.List()
-	if err != nil{
-		c.JSON(http.StatusOK, gin.H{"msg": "success","data":data})
+	data, err := user.List()
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"msg": "success", "data": data})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"msg": "success","data":data})
+	c.JSON(http.StatusOK, gin.H{"msg": "success", "data": data})
 }
 
 //@Summary 新增用户信息
@@ -62,9 +62,9 @@ func (u User) List(c *gin.Context) {
 func (u User) Create(c *gin.Context) {
 	name := c.PostForm("name")
 	age := c.PostForm("age")
-	adderss := c.PostForm("address")
+	address := c.PostForm("address")
 	user := model.NewUser()
-	err := user.Add(name,adderss,age)
+	err := user.Add(name, address, age)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"msg": "failed"})
 		return
@@ -76,14 +76,23 @@ func (u User) Create(c *gin.Context) {
 //@Produce json
 //@Param id path int true "用户ID"
 //@Param name body string true "用户名"
-//@Param pwd body string true "密码"
-//@Param email body string true "邮箱"
+//@Param age body int true "年龄"
+//@Param address body string true "地址"
 //@Success 200  "成功"
 //@Failure 400 "请求错误"
 //@Failure 500 "内部错误"
 //@Router /api/v1/user/{id} [put]
 func (u User) Update(c *gin.Context) {
-
+	id := c.Param("id")
+	name := c.PostForm("name")
+	age := c.PostForm("age")
+	address := c.PostForm("address")
+	user := model.NewUser()
+	err := user.Update(id, name, address, age)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"msg": "failed"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"msg": "success"})
 }
 
@@ -96,6 +105,13 @@ func (u User) Update(c *gin.Context) {
 //@Router /api/v1/user/{id} [delete]
 func (u User) Delete(c *gin.Context) {
 
+	id := c.Param("id")
+	user := model.NewUser()
+	err := user.Delete(id)
+	if err != nil {
+		c.JSON(http.StatusOK, gin.H{"msg": "failed"})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{"msg": "success"})
 }
 
