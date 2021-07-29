@@ -6,6 +6,7 @@ Server:
 
 
 
+
 Upload:
   UploadMaxSize:  5     #MB
   UploadPath:     resource/uploads/video  #文件上传目录

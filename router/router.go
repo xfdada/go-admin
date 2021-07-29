@@ -17,6 +17,7 @@ func NewRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
+	r.Use(middleware.Logger())
 	r.GET("/doc/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.StaticFS("/uploads", http.Dir(global.Upload.UploadPath))
 	r.GET("/api/get_token", v1.GetToken)

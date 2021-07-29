@@ -1,6 +1,8 @@
 package middleware
 
 import (
+	"go-admin/global/errcode"
+	"go-admin/global/response"
 	"go-admin/utils/jwts"
 
 	"github.com/dgrijalva/jwt-go"
@@ -9,10 +11,10 @@ import (
 
 func Jwt() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		r := response.NewResponse(c)
 		var (
-			token   string
-			code    = 200
-			message string
+			token  string
+			e_code = errcode.Success
 		)
 		if s, exist := c.GetQuery("token"); exist {
 			token = s
@@ -20,23 +22,20 @@ func Jwt() gin.HandlerFunc {
 			token = c.GetHeader("token")
 		}
 		if token == "" {
-			code = 500
-			message = "token为空"
+			e_code = errcode.NoToken
 		} else {
 			_, err := jwts.ParseToken(token)
 			if err != nil {
 				switch err.(*jwt.ValidationError).Errors {
 				case jwt.ValidationErrorExpired:
-					code = 500
-					message = "token过期"
+					e_code = errcode.TokenTimeout
 				default:
-					code = 500
-					message = "token无效"
+					e_code = errcode.TokenError
 				}
 			}
 		}
-		if code != 200 {
-			c.JSON(200, gin.H{"code": code, "err": message})
+		if e_code != errcode.Success {
+			r.ToError(e_code)
 			c.Abort()
 			return
 		}

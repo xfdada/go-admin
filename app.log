@@ -8,3 +8,30 @@
 [logger]2021/07/27 06:21:36 loggers.go:21: 连接数据库失败，错误详情是err:invalid bool value: %!s(bool=true)
 
 [logger]2021/07/27 09:58:17 loggers.go:21: 插入数据失败Details:invalid connection
+[logger]2021/07/28 03:15:05 loggers.go:21: 查询失败1Details:invalid connection
+[logger]2021/07/28 03:17:55 loggers.go:21: 插入数据失败Details:Error 1054: Unknown column 'created_at' in 'field list'
+[logger]2021/07/28 03:59:22 loggers.go:21: 查询失败20Details:record not found
+[logger]2021/07/28 04:00:02 loggers.go:21: 查询失败20Details:record not found
+[logger]2021/07/29 02:36:18 loggers.go:21: 初始化连接数据库失败，错误详情是err:Error 1049: Unknown database 'blog'
+
+[logger]2021/07/29 02:36:18 loggers.go:21: 连接数据库失败，错误详情是err:Error 1049: Unknown database 'blog'
+
+[logger]2021/07/29 02:39:50 loggers.go:21: 初始化连接数据库失败，错误详情是err:Error 1049: Unknown database 'blog'
+
+[logger]2021/07/29 02:39:50 loggers.go:21: 连接数据库失败，错误详情是err:Error 1049: Unknown database 'blog'
+
+[logger]2021/07/29 02:44:23 loggers.go:21: 初始化连接数据库失败，错误详情是err:Error 1049: Unknown database 'blog'
+
+[logger]2021/07/29 02:44:23 loggers.go:21: 连接数据库失败，错误详情是err:Error 1049: Unknown database 'blog'
+
+[logger]2021/07/29 03:54:58 loggers.go:21: 初始化连接数据库失败，错误详情是err:Error 1049: Unknown database 'blog'
+
+[logger]2021/07/29 03:54:58 loggers.go:21: 连接数据库失败，错误详情是err:Error 1049: Unknown database 'blog'
+
+[logger]2021/07/29 06:40:01 loggers.go:21: 初始化连接数据库失败，错误详情是err:Error 1049: Unknown database 'blog'
+
+[logger]2021/07/29 06:40:01 loggers.go:21: 连接数据库失败，错误详情是err:Error 1049: Unknown database 'blog'
+
+[logger]2021/07/29 06:51:53 loggers.go:21: 查询失败20Details:record not found
+[logger]2021/07/29 08:19:28 loggers.go:21: 查询失败Details:invalid connection
+[logger]2021/07/29 08:23:03 loggers.go:21: 查询失败Details:invalid connection

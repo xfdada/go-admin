@@ -17,6 +17,7 @@ require (
 	github.com/mattn/go-isatty v0.0.13 // indirect
 	github.com/mojocn/base64Captcha v1.3.5
 	github.com/onsi/gomega v1.14.0 // indirect
+	github.com/sirupsen/logrus v1.8.1
 	github.com/spf13/viper v1.8.1
 	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.7.0
@@ -27,6 +28,6 @@ require (
 	golang.org/x/sys v0.0.0-20210630005230-0f9fa26af87c // indirect
 	golang.org/x/tools v0.1.5 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
-	gorm.io/driver/mysql v1.1.1 // indirect
-	gorm.io/gorm v1.21.12 // indirect
+	gorm.io/driver/mysql v1.1.1
+	gorm.io/gorm v1.21.12
 )

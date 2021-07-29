@@ -21,23 +21,26 @@ func (u User) TableName() string {
 	return "blog_user"
 }
 
-func (u User) Get(id string) (User, error) {
+func (u User) Get(id string) (User, int) {
 	db := global.DB
-	err := db.Where("id = ?", id).First(&u).Error
-	if err != nil {
-		loggers.Logs(fmt.Sprint("查询失败", id, "Details:", err))
-		return User{}, err
+	res := db.Where("id = ?", id).First(&u)
+	if res.Error != nil {
+		loggers.Logs(fmt.Sprint("查询失败", id, "Details:", res.Error))
+		return User{}, 0
 	}
-	return u, nil
+	if res.RowsAffected <= 0 {
+		return User{}, 0
+	}
+	return u, 1
 }
 
 func (u User) List() ([]User, error) {
 	var user []User
 	db := global.DB
-	err := db.Find(&user).Error
-	if err != nil {
-		loggers.Logs(fmt.Sprint("查询失败", "Details:", err))
-		return []User{}, err
+	res := db.Find(&user)
+	if res.Error != nil {
+		loggers.Logs(fmt.Sprint("查询失败", "Details:", res.Error))
+		return []User{}, res.Error
 	}
 	return user, nil
 }
@@ -63,12 +66,12 @@ func (u User) Update(id, name, address, age string) error {
 	}
 	return nil
 }
-func (u User) Delete(id string) error {
+func (u User) Delete(id string) (int64, error) {
 	db := global.DB
-	err := db.Delete(&u, id).Error
-	if err != nil {
-		loggers.Logs(fmt.Sprint("删除数据失败", "Details:", err))
-		return err
+	res := db.Delete(&u, id)
+	if res.Error != nil {
+		loggers.Logs(fmt.Sprint("删除数据失败", "Details:", res.Error))
+		return 0, res.Error
 	}
-	return nil
+	return res.RowsAffected, nil
 }

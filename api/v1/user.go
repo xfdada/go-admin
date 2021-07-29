@@ -2,10 +2,12 @@ package v1
 
 import (
 	"fmt"
+	"go-admin/global/errcode"
+	"go-admin/global/response"
 	"go-admin/model"
-	_ "go-admin/model"
 	"go-admin/utils/upload"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 )
@@ -20,17 +22,28 @@ func NewUser() User {
 //@Produce json
 //@Param id path int true "用户ID"
 //@Success 200 {object} model.User "成功"
-//@Failure 500 {object} User "内部错误"
+//@Failure 400 {object} errcode.Error "未找到"
+//@Failure 500 {object} errcode.Error "内部错误"
 //@Router /api/v1/user/{id} [get]
 func (u User) Get(c *gin.Context) {
+	r := response.NewResponse(c)
 	id := c.Param("id")
-	user := model.NewUser()
-	data, err := user.Get(id)
-	if err != nil {
-		c.JSON(http.StatusOK, gin.H{"msg": "success", "data": data})
+	ids, _ := strconv.Atoi(id)
+	if ids <= 0 {
+		r.ToError(errcode.ParamsError)
+		c.Abort()
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"msg": "success", "data": data})
+	user := model.NewUser()
+	data, row := user.Get(id)
+	if row == 0 {
+		r.ToError(errcode.NotFoundError)
+		c.Abort()
+		return
+	}
+	r.ToResponse(data)
+	c.Abort()
+	return
 }
 
 //@Summary 获取多条用户信息
@@ -107,8 +120,8 @@ func (u User) Delete(c *gin.Context) {
 
 	id := c.Param("id")
 	user := model.NewUser()
-	err := user.Delete(id)
-	if err != nil {
+	row, err := user.Delete(id)
+	if err != nil || row == 0 {
 		c.JSON(http.StatusOK, gin.H{"msg": "failed"})
 		return
 	}
