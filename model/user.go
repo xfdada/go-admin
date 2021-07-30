@@ -2,8 +2,11 @@ package model
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"go-admin/global"
+	pg "go-admin/global/page"
 	"go-admin/utils/loggers"
+	"math"
 	"strconv"
 )
 
@@ -12,6 +15,11 @@ type User struct {
 	Name    string `json:"name"`
 	Age     int    `json:"age"`
 	Address string `json:"address"`
+}
+
+type UserList struct {
+	pg.Page
+	Data []User `json:"data"`
 }
 
 func NewUser() User {
@@ -34,15 +42,23 @@ func (u User) Get(id string) (User, int) {
 	return u, 1
 }
 
-func (u User) List() ([]User, error) {
+func (u User) List(c *gin.Context) (interface{}, error) {
 	var user []User
 	db := global.DB
-	res := db.Find(&user)
+	nowPage, _ := strconv.Atoi(c.Query("page"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
+	res := db.Scopes(Paginate(nowPage, pageSize)).Find(&user)
+	var total int64
+	db.Model(u).Count(&total)
 	if res.Error != nil {
 		loggers.Logs(fmt.Sprint("查询失败", "Details:", res.Error))
 		return []User{}, res.Error
 	}
-	return user, nil
+	pages := UserList{
+		Page: pg.Page{total, math.Ceil(float64(total) / float64(pageSize)), int64(pageSize), nowPage},
+		Data: user,
+	}
+	return pages, nil
 }
 
 func (u User) Add(name, address, age string) error {

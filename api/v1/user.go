@@ -18,8 +18,10 @@ func NewUser() User {
 	return User{}
 }
 
+// @Tags 用户相关接口
 //@Summary 获取指定用户信息
 //@Produce json
+//@Param token header string true "token"
 //@Param id path int true "用户ID"
 //@Success 200 {object} model.User "成功"
 //@Failure 400 {object} errcode.Error "未找到"
@@ -46,16 +48,17 @@ func (u User) Get(c *gin.Context) {
 	return
 }
 
+// @Tags 用户相关接口
 //@Summary 获取多条用户信息
 //@Produce json
-//@Success 200  "成功"
+//@Success 200 {object} model.UserList "成功"
 //@Failure 400 "请求错误"
 //@Failure 500 "内部错误"
 //@Router /api/v1/user [get]
 func (u User) List(c *gin.Context) {
 
 	user := model.NewUser()
-	data, err := user.List()
+	data, err := user.List(c)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"msg": "success", "data": data})
 		return
@@ -63,6 +66,7 @@ func (u User) List(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"msg": "success", "data": data})
 }
 
+// @Tags 用户相关接口
 //@Summary 新增用户信息
 //@Produce json
 //@Param name body string true "用户名"
@@ -85,6 +89,7 @@ func (u User) Create(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"msg": "success"})
 }
 
+// @Tags 用户相关接口
 //@Summary 更新指定用户信息
 //@Produce json
 //@Param id path int true "用户ID"
@@ -109,6 +114,7 @@ func (u User) Update(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"msg": "success"})
 }
 
+// @Tags 用户相关接口
 //@Summary 删除指定用户信息
 //@Produce json
 //@Param id path int true "用户ID"

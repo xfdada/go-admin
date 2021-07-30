@@ -9,9 +9,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-
 //@title go-admin快速开发示例
 //@version	1.0
+//@description go-admin快速api开发框架
 func main() {
 	gin.SetMode(global.Server.Model)
 	routers := router.NewRouter()

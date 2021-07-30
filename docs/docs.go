@@ -24,15 +24,49 @@ var doc = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/get_token": {
+            "get": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "固定接口"
+                ],
+                "summary": "获取token",
+                "responses": {
+                    "200": {
+                        "description": "成功"
+                    },
+                    "400": {
+                        "description": "未找到",
+                        "schema": {
+                            "$ref": "#/definitions/errcode.Error"
+                        }
+                    },
+                    "500": {
+                        "description": "内部错误",
+                        "schema": {
+                            "$ref": "#/definitions/errcode.Error"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/user": {
             "get": {
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "用户相关接口"
+                ],
                 "summary": "获取多条用户信息",
                 "responses": {
                     "200": {
-                        "description": "成功"
+                        "description": "成功",
+                        "schema": {
+                            "$ref": "#/definitions/model.UserList"
+                        }
                     },
                     "400": {
                         "description": "请求错误"
@@ -45,6 +79,9 @@ var doc = `{
             "post": {
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "用户相关接口"
                 ],
                 "summary": "新增用户信息",
                 "parameters": [
@@ -94,8 +131,18 @@ var doc = `{
                 "produces": [
                     "application/json"
                 ],
+                "tags": [
+                    "用户相关接口"
+                ],
                 "summary": "获取指定用户信息",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "header",
+                        "required": true
+                    },
                     {
                         "type": "integer",
                         "description": "用户ID",
@@ -111,10 +158,16 @@ var doc = `{
                             "$ref": "#/definitions/model.User"
                         }
                     },
+                    "400": {
+                        "description": "未找到",
+                        "schema": {
+                            "$ref": "#/definitions/errcode.Error"
+                        }
+                    },
                     "500": {
                         "description": "内部错误",
                         "schema": {
-                            "$ref": "#/definitions/v1.User"
+                            "$ref": "#/definitions/errcode.Error"
                         }
                     }
                 }
@@ -122,6 +175,9 @@ var doc = `{
             "put": {
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "用户相关接口"
                 ],
                 "summary": "更新指定用户信息",
                 "parameters": [
@@ -142,17 +198,17 @@ var doc = `{
                         }
                     },
                     {
-                        "description": "密码",
-                        "name": "pwd",
+                        "description": "年龄",
+                        "name": "age",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "string"
+                            "type": "integer"
                         }
                     },
                     {
-                        "description": "邮箱",
-                        "name": "email",
+                        "description": "地址",
+                        "name": "address",
                         "in": "body",
                         "required": true,
                         "schema": {
@@ -175,6 +231,9 @@ var doc = `{
             "delete": {
                 "produces": [
                     "application/json"
+                ],
+                "tags": [
+                    "用户相关接口"
                 ],
                 "summary": "删除指定用户信息",
                 "parameters": [
@@ -201,10 +260,27 @@ var doc = `{
         }
     },
     "definitions": {
+        "errcode.Error": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "msg": {
+                    "type": "string"
+                }
+            }
+        },
         "model.User": {
             "type": "object",
             "properties": {
-                "email": {
+                "address": {
+                    "type": "string"
+                },
+                "age": {
+                    "type": "integer"
+                },
+                "createdAt": {
                     "type": "string"
                 },
                 "id": {
@@ -213,13 +289,37 @@ var doc = `{
                 "name": {
                     "type": "string"
                 },
-                "pwd": {
+                "updatedAt": {
                     "type": "string"
                 }
             }
         },
-        "v1.User": {
-            "type": "object"
+        "model.UserList": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.User"
+                    }
+                },
+                "now_page": {
+                    "description": "当前页",
+                    "type": "integer"
+                },
+                "page_size": {
+                    "description": "每页数量",
+                    "type": "integer"
+                },
+                "pages": {
+                    "description": "页码总数",
+                    "type": "number"
+                },
+                "total": {
+                    "description": "总记录条数",
+                    "type": "integer"
+                }
+            }
         }
     }
 }`
@@ -240,7 +340,7 @@ var SwaggerInfo = swaggerInfo{
 	BasePath:    "",
 	Schemes:     []string{},
 	Title:       "go-admin快速开发示例",
-	Description: "",
+	Description: "go-admin快速api开发框架",
 }
 
 type s struct{}
