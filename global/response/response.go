@@ -19,7 +19,7 @@ func (r *Response) ToResponse(data interface{}) {
 	if data == nil {
 		data = gin.H{}
 	}
-	r.Ctx.JSON(http.StatusOK, data)
+	r.Ctx.JSON(http.StatusOK, gin.H{"code": 200, "data": data})
 }
 
 //失败返回

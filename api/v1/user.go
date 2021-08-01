@@ -56,14 +56,15 @@ func (u User) Get(c *gin.Context) {
 //@Failure 500 "内部错误"
 //@Router /api/v1/user [get]
 func (u User) List(c *gin.Context) {
-
+	r := response.NewResponse(c)
 	user := model.NewUser()
 	data, err := user.List(c)
 	if err != nil {
 		c.JSON(http.StatusOK, gin.H{"msg": "success", "data": data})
 		return
 	}
-	c.JSON(http.StatusOK, gin.H{"msg": "success", "data": data})
+	r.ToResponse(data)
+	return
 }
 
 // @Tags 用户相关接口

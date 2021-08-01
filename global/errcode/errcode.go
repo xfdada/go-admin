@@ -6,14 +6,17 @@ import (
 )
 
 var (
-	Success       = NewError(0, "成功")
 	ServerError   = NewError(100, "服务器内部错误")
 	ParamsError   = NewError(101, "参数错误")
 	NotFoundError = NewError(102, "未找到结果")
 	NoToken       = NewError(103, "缺少token")
 	TokenError    = NewError(104, "鉴权失败，token错误")
 	TokenTimeout  = NewError(105, "鉴权失败，token超时无效，请重新生成")
-	CodeError     = NewError(108, "验证码错误，请重新输入")
+	AddError      = NewError(106, "添加失败")
+	DeleteError   = NewError(107, "删除失败")
+	UpdateError   = NewError(108, "更新失败")
+	CodeError     = NewError(109, "验证码错误，请重新输入")
+	Success       = NewError(200, "成功")
 )
 var codes = map[int]string{}
 
@@ -58,6 +61,12 @@ func (e *Error) StatusCode() int {
 	case TokenError.Codes():
 		fallthrough
 	case TokenTimeout.Codes():
+		fallthrough
+	case AddError.Codes():
+		fallthrough
+	case DeleteError.Codes():
+		fallthrough
+	case UpdateError.Codes():
 		fallthrough
 	case CodeError.Codes():
 		return http.StatusUnauthorized

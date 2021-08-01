@@ -35,3 +35,11 @@
 [logger]2021/07/29 06:51:53 loggers.go:21: 查询失败20Details:record not found
 [logger]2021/07/29 08:19:28 loggers.go:21: 查询失败Details:invalid connection
 [logger]2021/07/29 08:23:03 loggers.go:21: 查询失败Details:invalid connection
+[logger]2021/07/29 12:21:08 loggers.go:21: 初始化连接数据库失败，错误详情是err:dial tcp 127.0.0.1:3306: connectex: No connection could be made because the target machine actively refused it.
+
+[logger]2021/07/29 12:21:08 loggers.go:21: 连接数据库失败，错误详情是err:dial tcp 127.0.0.1:3306: connectex: No connection could be made because the target machine actively refused it.
+
+[logger]2021/08/01 02:47:55 loggers.go:21: 初始化连接数据库失败，错误详情是err:dial tcp 127.0.0.1:3306: connectex: No connection could be made because the target machine actively refused it.
+
+[logger]2021/08/01 02:47:55 loggers.go:21: 连接数据库失败，错误详情是err:dial tcp 127.0.0.1:3306: connectex: No connection could be made because the target machine actively refused it.
+

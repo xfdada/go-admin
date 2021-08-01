@@ -44,7 +44,7 @@ func SqlLog(s string) *logrus.Logger {
 	logger.Out = src
 
 	//设置日志级别
-	logger.SetLevel(logrus.WarnLevel)
+	logger.SetLevel(logrus.DebugLevel)
 
 	//设置日志格式
 	logger.SetFormatter(&logrus.JSONFormatter{

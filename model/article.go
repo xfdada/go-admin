@@ -7,6 +7,10 @@ import (
 	"go-admin/utils/loggers"
 )
 
+var (
+	db = global.DB
+)
+
 type Article struct {
 	*Model
 	Title      string `json:"title"`       //标题
@@ -22,7 +26,12 @@ type ArticleList struct {
 }
 
 func NewArticle() *Article {
+	//db.AutoMigrate(&Article{})
 	return &Article{}
+}
+
+func (a *Article) TableName() string {
+	return "blog_articles"
 }
 
 func (a *Article) Get(id int) (*Article, error) {
@@ -35,7 +44,40 @@ func (a *Article) Get(id int) (*Article, error) {
 	return a, nil
 }
 
-func (a *Article) Create() error {
-
+func (a *Article) Create(title, desc, url, Content, CreatedBy string) error {
+	err := db.Model(a).Create(&Article{
+		Title:     title,
+		Desc:      desc,
+		Url:       url,
+		Content:   Content,
+		CreatedBy: CreatedBy,
+	}).Error
+	if err != nil {
+		loggers.Logs(fmt.Sprintf("文章插入失败 错误详情：%v\n", err))
+		return err
+	}
+	return nil
+}
+func (a *Article) Update(id int, title, desc, url, Content, ModifiedBy string) error {
+	err := db.Model(a).Where("id = ?", id).Updates(&Article{
+		Title:      title,
+		Desc:       desc,
+		Url:        url,
+		Content:    Content,
+		ModifiedBy: ModifiedBy,
+	}).Error
+	if err != nil {
+		loggers.Logs(fmt.Sprintf("文章更新失败 错误详情：%v\n", err))
+		return err
+	}
+	return nil
+}
+func (a *Article) Delete(id int) error {
+	db := global.DB
+	err := db.Model(a).Delete(a, id).Error
+	if err != nil {
+		loggers.Logs(fmt.Sprintf("删除文章失败 原因是err:%v\n", err))
+		return err
+	}
 	return nil
 }
