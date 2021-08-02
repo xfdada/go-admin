@@ -2,9 +2,12 @@ package model
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"go-admin/global"
 	"go-admin/global/page"
 	"go-admin/utils/loggers"
+	"math"
+	"strconv"
 )
 
 var (
@@ -13,20 +16,24 @@ var (
 
 type Article struct {
 	*Model
-	Title      string `json:"title"`       //标题
-	Desc       string `json:"desc"`        //简述
-	Url        string `json:"url"`         //封面图片地址
-	Content    string `json:"content"`     // 文章内容
-	CreatedBy  string `json:"created_by"`  // 创建者
-	ModifiedBy string `json:"modified_by"` //修改着
+	Title      string `json:"title" gorm:"type:varchar(255)"`      //标题
+	Desc       string `json:"desc" gorm:"type:varchar(500)"`       //简述
+	Url        string `json:"url" gorm:"type:varchar(100)"`        //封面图片地址
+	Content    string `json:"content"`                             // 文章内容
+	CreatedBy  string `json:"created_by" gorm:"type:varchar(20)"`  // 创建者
+	ModifiedBy string `json:"modified_by" gorm:"type:varchar(20)"` //修改着
 }
 type ArticleList struct {
 	*page.Page
-	Data interface{}
+	Data []Article `json:"data"`
 }
 
 func NewArticle() *Article {
-	//db.AutoMigrate(&Article{})
+	ok := db.Migrator().HasTable(&Article{})
+	if !ok {
+		_ = db.AutoMigrate(&Article{})
+		_ = db.Set("ENGINE", "InnoDB").AutoMigrate(&User{})
+	}
 	return &Article{}
 }
 
@@ -42,6 +49,29 @@ func (a *Article) Get(id int) (*Article, error) {
 		return nil, err
 	}
 	return a, nil
+}
+
+func (a *Article) List(c *gin.Context) (*ArticleList, error) {
+	var article []Article
+	nowPage, _ := strconv.Atoi(c.Query("page"))
+	pageSize, _ := strconv.Atoi(c.Query("page_size"))
+	res := db.Scopes(Paginate(nowPage, pageSize)).Find(&article)
+	var total int64
+	db.Model(a).Count(&total)
+	if res.Error != nil {
+		loggers.Logs(fmt.Sprint("查询失败", "Details:", res.Error))
+		return &ArticleList{}, res.Error
+	}
+	data := ArticleList{
+		Page: &page.Page{
+			PageSize: int64(pageSize),
+			Total:    total,
+			NowPage:  nowPage,
+			Pages:    math.Ceil(float64(total) / float64(pageSize)),
+		},
+		Data: article,
+	}
+	return &data, nil
 }
 
 func (a *Article) Create(title, desc, url, Content, CreatedBy string) error {

@@ -42,6 +42,5 @@ func NewDB() (*gorm.DB, error) {
 
 	sqlDB.SetMaxIdleConns(Mysqls.MaxIdleConns)
 	sqlDB.SetMaxOpenConns(Mysqls.MaxOpenConns)
-	sqlDB.SetConnMaxLifetime(time.Hour)
 	return db, nil
 }

@@ -25,7 +25,17 @@ func Article_Get(c *gin.Context) {
 }
 
 func Article_List(c *gin.Context) {
-
+	article := model.NewArticle()
+	res := response.NewResponse(c)
+	data, err := article.List(c)
+	if err != nil {
+		res.ToError(errcode.NotFoundError)
+		c.Abort()
+		return
+	}
+	res.ToResponse(data)
+	c.Abort()
+	return
 }
 
 func Article_Create(c *gin.Context) {

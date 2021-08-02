@@ -13,8 +13,8 @@ func Jwt() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		r := response.NewResponse(c)
 		var (
-			token  string
-			e_code = errcode.Success
+			token string
+			eCode = errcode.Success
 		)
 		if s, exist := c.GetQuery("token"); exist {
 			token = s
@@ -22,20 +22,20 @@ func Jwt() gin.HandlerFunc {
 			token = c.GetHeader("token")
 		}
 		if token == "" {
-			e_code = errcode.NoToken
+			eCode = errcode.NoToken
 		} else {
 			_, err := jwts.ParseToken(token)
 			if err != nil {
 				switch err.(*jwt.ValidationError).Errors {
 				case jwt.ValidationErrorExpired:
-					e_code = errcode.TokenTimeout
+					eCode = errcode.TokenTimeout
 				default:
-					e_code = errcode.TokenError
+					eCode = errcode.TokenError
 				}
 			}
 		}
-		if e_code != errcode.Success {
-			r.ToError(e_code)
+		if eCode != errcode.Success {
+			r.ToError(eCode)
 			c.Abort()
 			return
 		}
