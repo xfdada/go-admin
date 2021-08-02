@@ -10,10 +10,6 @@ import (
 	"strconv"
 )
 
-var (
-	db = global.DB
-)
-
 type Article struct {
 	*Model
 	Title      string `json:"title" gorm:"type:varchar(255)"`      //标题

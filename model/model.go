@@ -3,8 +3,13 @@ package model
 import (
 	"database/sql/driver"
 	"fmt"
+	"go-admin/global"
 	"gorm.io/gorm"
 	"time"
+)
+
+var (
+	db = global.DB
 )
 
 type LocalTime time.Time
