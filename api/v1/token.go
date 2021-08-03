@@ -2,6 +2,8 @@ package v1
 
 import (
 	"fmt"
+	"go-admin/global/errcode"
+	"go-admin/global/response"
 	"go-admin/utils/captcha"
 	"go-admin/utils/jwts"
 	"go-admin/utils/loggers"
@@ -32,6 +34,22 @@ func GetCapt(c *gin.Context) {
 		c.JSON(200, gin.H{"id": id, "capt": capt})
 	}
 
+}
+func Verify(c *gin.Context) {
+	res := response.NewResponse(c)
+	id := c.PostForm("cid")
+	val := c.PostForm("captcha")
+	if id == "" || val == "" {
+		res.ToError(errcode.ParamsError)
+		return
+	}
+	// 同时在内存清理掉这个图片
+	ok := captcha.Verify(id, val)
+	if !ok {
+		res.ToError(errcode.CodeError)
+		return
+	}
+	res.ToResponse(errcode.Success)
 }
 
 func SetKey(c *gin.Context) {

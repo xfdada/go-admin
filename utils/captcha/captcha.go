@@ -69,3 +69,15 @@ func GetCaptcha() (string, string) {
 	}
 	return id, b64s
 }
+
+func Verify(id string, val string) bool {
+	if id == "" || val == "" {
+		return false
+	}
+	store := base64Captcha.DefaultMemStore
+	if global.Captcha.UseRedis {
+		store = NewDefaultRedisStore()
+	}
+	// 同时在内存清理掉这个图片
+	return store.Verify(id, val, true)
+}

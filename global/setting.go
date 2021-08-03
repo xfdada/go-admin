@@ -10,17 +10,19 @@ import (
 
 var (
 	Server  *config.Server
-	Mysqls   *config.Mysql
+	Mysqls  *config.Mysql
 	Captcha *config.Captcha
 	JWT     *config.JWT
 	Upload  *config.Upload
-	DB		*gorm.DB
+	DB      *gorm.DB
+	Email   *config.Email
 )
 var (
 	port    string
 	runMode string
 	cfgpath string
 )
+
 func init() {
 	err := setupFlag()
 	if err != nil {
@@ -32,10 +34,9 @@ func init() {
 	}
 	err = initDB()
 	if err != nil {
-		loggers.Logs("连接数据库失败，错误详情是err:"+fmt.Sprintf("%v\n",err))
+		loggers.Logs("连接数据库失败，错误详情是err:" + fmt.Sprintf("%v\n", err))
 	}
 }
-
 
 func initConfig() error {
 	cfg, err := config.NewConfig(cfgpath)
@@ -62,6 +63,10 @@ func initConfig() error {
 	if err != nil {
 		return err
 	}
+	err = cfg.ReadConfig("Email", &Email)
+	if err != nil {
+		return err
+	}
 	if port != "" {
 		Server.Port = port
 	}
@@ -71,9 +76,9 @@ func initConfig() error {
 	return nil
 }
 
-func initDB() error{
+func initDB() error {
 	var err error
-	DB , err = NewDB()
+	DB, err = NewDB()
 	if err != nil {
 		return err
 	}

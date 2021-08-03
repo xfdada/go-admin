@@ -22,6 +22,7 @@ func NewRouter() *gin.Engine {
 	r.StaticFS("/uploads", http.Dir(global.Upload.UploadPath))
 	r.GET("/api/get_token", v1.GetToken)
 	r.GET("/api/get_capt", v1.GetCapt)
+	r.GET("/api/check/:uuid", v1.CheckUser)
 	r.POST("/api/set", v1.SetKey)
 	r.POST("/api/get", v1.GetKey)
 	r.GET("/", service.Index)
@@ -41,6 +42,10 @@ func NewRouter() *gin.Engine {
 		apiv1.DELETE("/article/:id", v1.Article_Delete)
 		apiv1.PUT("/article/:id", v1.Article_Update)
 		apiv1.GET("/article", v1.Article_List)
+		apiv1.GET("/video_user/:id", v1.VideoGet)
+		apiv1.GET("/video_user", v1.VideoUserList)
+		apiv1.POST("/video_user", v1.VideoCreate)
+
 	}
 	return r
 }

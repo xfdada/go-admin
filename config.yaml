@@ -47,3 +47,9 @@ JWT:                  #jwt认证令牌
   Secret:       gowebs
   Issuer:       xfdada
   Expire:      7200
+
+Email:
+  Port:       465
+  Host:       smtp.163.com
+  User:       xiangfudada@163.com
+  Pwd:        KRVWLPPREFCNTRNT
