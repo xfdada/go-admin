@@ -2,14 +2,12 @@ package v1
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"go-admin/global/errcode"
 	"go-admin/global/response"
 	"go-admin/utils/captcha"
 	"go-admin/utils/jwts"
-	"go-admin/utils/loggers"
-	"go-admin/utils/redis"
-
-	"github.com/gin-gonic/gin"
+	"go-admin/utils/sendmail"
 )
 
 //@Tags 固定接口
@@ -31,9 +29,11 @@ func GetToken(c *gin.Context) {
 func GetCapt(c *gin.Context) {
 	id, capt := captcha.GetCaptcha()
 	if id != "" {
-		c.JSON(200, gin.H{"id": id, "capt": capt})
+		c.JSON(200, gin.H{"code": 200, "id": id, "capt": capt})
+		c.Abort()
+		return
 	}
-
+	c.JSON(200, gin.H{"code": 110, "msg": "获取验证码失败"})
 }
 func Verify(c *gin.Context) {
 	res := response.NewResponse(c)
@@ -52,29 +52,15 @@ func Verify(c *gin.Context) {
 	res.ToResponse(errcode.Success)
 }
 
-func SetKey(c *gin.Context) {
-	key := c.PostForm("key")
-	value := c.PostForm("value")
-	loggers.Logs(" Key: " + key + " value: " + value)
-	err := redis.Set(key, value, 0)
-	if err != nil {
+//发送验证码
 
-		c.JSON(500, gin.H{"msg": "failed"})
+func SendEmail(c *gin.Context) {
+	res := response.NewResponse(c)
+	username := c.PostForm("email")
+	ok := sendmail.SendCaptcha(username)
+	if ok != nil {
+		res.ToError(errcode.ServerError)
 		return
 	}
-	c.JSON(200, gin.H{"msg": "success"})
-	return
-}
-
-func GetKey(c *gin.Context) {
-	key := c.PostForm("key")
-	ok, err := redis.Get(key)
-
-	if err != nil {
-		loggers.Logs("get Key failed")
-		c.JSON(500, gin.H{"msg": "failed"})
-		return
-	}
-	c.JSON(200, gin.H{"msg": "success", "data": ok})
-	return
+	res.ToResponse(errcode.Success)
 }

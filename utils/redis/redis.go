@@ -33,11 +33,11 @@ func NewClient() *redis.Client {
 	return Redis
 }
 
-//设置键值和存活时间
+// Set 设置键值和存活时间
 func Set(key string, value interface{}, time time.Duration) error {
 	var err error
 	if time > 0 {
-		err = Redis.Set(key, value, time).Err()
+		err = Redis.Set(key, value, time*1000*1000*1000).Err()
 	} else {
 		err = Redis.Set(key, value, 0).Err()
 	}
@@ -48,7 +48,7 @@ func Set(key string, value interface{}, time time.Duration) error {
 	return nil
 }
 
-//获取值
+// Get 获取值
 func Get(key string) (string, error) {
 	value, err := Redis.Get(key).Result()
 	if err != nil {
@@ -57,7 +57,7 @@ func Get(key string) (string, error) {
 	return value, nil
 }
 
-//查询键是否存在
+// Exists 查询键是否存在
 func Exists(key string) (int64, error) {
 	ok, err := Redis.Exists(key).Result()
 	return ok, err

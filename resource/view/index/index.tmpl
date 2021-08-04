@@ -5,15 +5,50 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>文件上传示例</title>
+    <script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+    <title>登录示例</title>
 </head>
 <body>
     <h1 style="text-align: center;">{{.title}}</h1>
-    <form action="/api/upload" enctype="multipart/form-data" method="post">
-        <input type="file" name="file" id="">
-        <input type="submit" value="上传">
+    <form action="/login" id="pwd" enctype="multipart/form-data" method="post">
+        <input type="text" hidden name="type" value="pwd">
+        <div><span>账号：</span><input type="text" name="username" placeholder="请输入账号"></div>
+        <div><span>密码：</span><input type="password" name="password" id=""></div>
+        <div><span>验证码：</span><input type="text" maxlength="6" name="captcha"></div>
+        <input type="text" hidden id="hid" name="hid">
+        <img src="" id="captcha" alt="">
+        <input type="submit" value="登录">
     </form>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHgAAAA8CAMAAACac46aAAAAe1BMVEUAAABbWSbCwI3OzJmNi1hsajezsX51c0CWlGGVk2CjoW6sqndPTRpaWCU5NwRycD2amGW8uoc5NwTAvou4toO2tIF7eUZeXCnOzJnJx5RkYi9vbTrU0p9cWieKiFWQjltXVSK7uYY/PQpIRhOHhVJubDlsajdLSRbJx5TSYnMUAAAAAXRSTlMAQObYZgAAAmRJREFUeJzsl++uqjAMwFuO0ZwcT2KQhIT4CZT3f8Qb2ca6rR0rErw3137QsT/9td1KB3zkr5Wfd3F/tiP/6sjbcX915O1kZy7KQ3edJp3hiCL5fifkYZmr3Koyj4ehgKziLsnZkXOTCvbkS8s9n+kjHx63J98Z7tciuQ4ZIVc4EJb7nSMvcuvaIpDB2A4h7hlugTgucGDLLThpRBRZKaeYJS9qqAj3XkzmuXIEGG5VAfSO/AIXUdh0kQzQ933pbAIOGRqklx64RDgRtSk48o453mWmpFE6nU6yAtNHRjKxz+HRJkdIBsSrsGyaO85+crNcvnm1mNpiWuHy5/D1ehW4ADCOI84LE9cITuTaRrhl5oHn2qmjt5hDx8HAJD4tmteR17J0KiKbkTGdA8fctjUvYEVCxODIJyMNXzS81S04j/POJofC/k+Bjtx7cptGSLPEggy0CVchjbHPCM5j0WF/tjLgyXrKdudzOn1oY5+jyOAij8lEw53yTU7nbM/84lUfrmemE21pyEzPQQbL2SCS0xIhcg8Hfp1r18r6MoQvHDZxpi7e43mBvUqVc4dhoT4JZXsecs1aWVAHQXcCAehiW2hSrinkkP3CmUe6riN9iBWSh7VcEC/xRGUX9E3XLU9ehbx4BQX2uWnVKlbAvVxCtTIf03vaS2TXOFJ+hBSBzesGHI9HippvGvaHX0QKwAtktlcO7FSKy7m3NTax3LbVTL/dtiPLQw+OvBU3I48HR95D3sX9T0X7+SrIQc1VfzjzXHv36RTkLbjOY1KV95SLyuMNuaSA7kx+E/cj/4T8CQAA///DXhCgijGp6gAAAABJRU5ErkJggg==">
+
+{{/*    <form action="/login" id="captcha" enctype="multipart/form-data" method="post">*/}}
+{{/*        <div><span>账号：</span><input type="text" id="email" name="username" placeholder="请输入账号"></div>*/}}
+{{/*        <div><span>验证码：</span><input type="text" maxlength="6" name="captcha"> <input type="button" onclick="sandmail()" value="获取验证码"></div>*/}}
+{{/*        <input type="submit" value="登录">*/}}
+{{/*    </form>*/}}
 </body>
+<script>
+    $(function () {
+        $.get("/api/get_capt",function (res) {
+            if(res.code===200){
+                $("#hid").val(res.id)
+                $("#captcha").attr("src",res.capt)
+                console.log(res.id)
+                console.log(res.capt)
+            }else{
+                alert(res.msg)
+            }
+        })
+    })
+    function sandmail() {
+        var email = $("#email").val()
+        if (email===''){
+            alert("请填写账号")
+            return
+        }
+        $.post("/sendmail",{email:email},function (res) {
+            console.log(res)
+        })
+    }
+</script>
 </html>
 {{end}}

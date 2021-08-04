@@ -34,7 +34,7 @@ Redis:
   DB:           0             #数据库
 
 Captcha:
-  UseRedis:     True   #是否开启redis保存验证码，默认验证码最大保存数量10000个
+  UseRedis:     True   #是否开启redis库保存验证码，默认库验证码最大保存数量10000个
   PreKey:       captcha_ #验证码id存储前缀
   Expiration:   600   #验证码存活时间
   Height:       60    #验证码图片高度
@@ -49,7 +49,7 @@ JWT:                  #jwt认证令牌
   Expire:      7200
 
 Email:
-  Port:       465
-  Host:       smtp.163.com
-  User:       xiangfudada@163.com
-  Pwd:        KRVWLPPREFCNTRNT
+  Port:       465                     #端口号
+  Host:       smtp.163.com            #邮件服务器地址
+  User:       xiangfudada@163.com     #发送邮箱
+  Pwd:        KRVWLPPREFCNTRNT        #授权码

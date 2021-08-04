@@ -3,12 +3,11 @@ package model
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"go-admin/global"
 	"go-admin/global/page"
 	"go-admin/utils"
 	"go-admin/utils/loggers"
+	"go-admin/utils/sendmail"
 	"go-admin/utils/uuid"
-	"gopkg.in/gomail.v2"
 	"gorm.io/gorm"
 	"math"
 	"strconv"
@@ -58,14 +57,14 @@ func (v *VideoUser) Create(param map[string]interface{}) error {
 		HeadIcon:    param["headIcon"].(string),
 		Phone:       param["phone"].(string),
 		Email:       param["email"].(string),
-		Password:    utils.EncodeMD5(param["password"].(string)),
+		Password:    utils.HashAndSalt(param["password"].(string)),
 		Description: param["desc"].(string),
 		IsLive:      0,
 	})
 	if res.Error != nil {
 		return res.Error
 	}
-	go sendMail(param["email"].(string), uuids)
+	go sendmail.SendMail(param["email"].(string), uuids)
 	return nil
 }
 
@@ -97,21 +96,15 @@ func (v *VideoUser) OnLive(uuids string) error {
 	return nil
 }
 
-func sendMail(email, uuids string) {
-	mail := []string{email}
-	m := gomail.NewMessage()
-	m.SetHeader("From", m.FormatAddress(global.Email.User, "祥富官方影院")) //此方法可以取别名
-	m.SetHeader("To", mail...)
-	m.SetHeader("Subject", "账号激活邮件")
-	body := `
-<h1 style="text-align:center;font-size:18px">祥富影院</h1>
-<p> 欢迎注册本影院，为了更好的服务您，方便您找回密码，请点击此链接激活账号</p>
-<p> <a href="http://127.0.0.1:8001/api/check/` + uuids + `">激活</a></p>
-`
-	m.SetBody("text/html", body)
-	d := gomail.NewDialer(global.Email.Host, global.Email.Port, global.Email.User, global.Email.Pwd)
-	err := d.DialAndSend(m)
-	if err != nil {
-		loggers.Logs(fmt.Sprintf("发送邮件给%s发生错误，错误详情是：err:%v\n", email, err))
+func (v *VideoUser) Login(userName, password string) bool {
+	res := db.Model(v).Where("email = ? and is_live = 1", userName).First(v)
+	if res.Error != nil {
+		loggers.Logs(fmt.Sprintf("查询用户失败 错误详情是%v", res.Error))
+		return false
 	}
+	ok := utils.ComparePasswords(v.Password, password)
+	if !ok {
+		return false
+	}
+	return true
 }
