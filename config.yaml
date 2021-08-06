@@ -27,6 +27,9 @@ Mysql:
   ParseTime:    True
   MaxIdleConns: 10
   MaxOpenConns: 30
+  ConnMaxIdleTime:    120 #连接池空闲的最长时间 按照数据库中的值进行设置
+  ConnMaxLifetime:    120 #可重用连接的最长时间
+
 
 Redis:
   Addr:         127.0.0.1:6379 #地址
@@ -52,4 +55,4 @@ Email:
   Port:       465                     #端口号
   Host:       smtp.163.com            #邮件服务器地址
   User:       xiangfudada@163.com     #发送邮箱
-  Pwd:        KRVWLPPREFCNTRNT        #授权码
+  Pwd:        KRVWLPPREF****        #授权码

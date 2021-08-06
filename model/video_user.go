@@ -24,13 +24,13 @@ type VideoUser struct {
 	Description string         `json:"description" gorm:"type:varchar(200)"`
 	SingIp      string         `json:"sing_ip" gorm:"type:varchar(20)"`
 	CreatedAt   *LocalTime     `json:"created_at" gorm:"type:datetime;column:sing_time;"`
-	IsLive      uint8          `json:"is_live" gorm:"type:tinyint(1)"`
+	IsLive      uint8          `json:"is_live" gorm:"type:tinyint(1);default:0"`
 	UpdateAt    *LocalTime     `json:"update_at" gorm:"type:datetime;column:sing_up;"`
 	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`
 }
 type VideoUserList struct {
 	page.Page
-	Data []VideoUser
+	Data []VideoUser `json:"data"`
 }
 
 func NewVideoUser() *VideoUser {
@@ -88,6 +88,21 @@ func (v *VideoUser) List(c *gin.Context) (*VideoUserList, error) {
 		Data: list,
 	}, nil
 }
+
+func (v *VideoUser) Update(param map[string]interface{}) error {
+	res := db.Model(v).Where("uuid = ?", param["uuid"].(string)).Updates(&VideoUser{
+		NickName:    param["nickName"].(string),
+		HeadIcon:    param["headIcon"].(string),
+		Phone:       param["phone"].(string),
+		Email:       param["email"].(string),
+		Description: param["desc"].(string),
+	})
+	if res.Error != nil {
+		loggers.Logs(fmt.Sprintf("更新用户信息失败，错误详情是err: %v", res.Error))
+		return res.Error
+	}
+	return nil
+}
 func (v *VideoUser) OnLive(uuids string) error {
 	res := db.Model(v).Where("uuid = ?", uuids).Update("is_live", 1)
 	if res.Error != nil {
@@ -106,5 +121,6 @@ func (v *VideoUser) Login(userName, password string) bool {
 	if !ok {
 		return false
 	}
+	db.Model(v).Update("SingIp", "127.0.0.1")
 	return true
 }

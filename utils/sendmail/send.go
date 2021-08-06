@@ -10,6 +10,22 @@ import (
 	"time"
 )
 
+func Send(aliasName, title, content string, mail []string) error {
+
+	m := gomail.NewMessage()
+	m.SetHeader("From", m.FormatAddress(global.Email.User, aliasName)) //此方法可以取别名
+	m.SetHeader("To", mail...)
+	m.SetHeader("Subject", title)
+	m.SetBody("text/html", content)
+	d := gomail.NewDialer(global.Email.Host, global.Email.Port, global.Email.User, global.Email.Pwd)
+	err := d.DialAndSend(m)
+	if err != nil {
+		loggers.Logs(fmt.Sprintf("发送邮件给%s发生错误，错误详情是：err:%v\n", mail, err))
+		return err
+	}
+	return nil
+}
+
 func SendMail(email, uuids string) {
 	mail := []string{email}
 	m := gomail.NewMessage()

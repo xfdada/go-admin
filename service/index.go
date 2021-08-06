@@ -42,4 +42,5 @@ func Login(c *gin.Context) {
 		}
 	}
 	c.JSON(http.StatusOK, gin.H{"mesg": "验证成功"})
+
 }

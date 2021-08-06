@@ -20,7 +20,7 @@ func GetJWTSecret() []byte {
 	return []byte(global.JWT.Secret)
 }
 
-//生成token
+// GenerateToken 生成token
 func GenerateToken(appkey, appsecret string) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(global.JWT.Expire * time.Second)

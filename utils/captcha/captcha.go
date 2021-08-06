@@ -52,6 +52,7 @@ func (rs *Store) Verify(id, answer string, clear bool) bool {
 	return v == answer
 }
 
+// GetCaptcha 生成base64验证码
 func GetCaptcha() (string, string) {
 	driver := base64Captcha.NewDriverDigit(global.Captcha.Height, global.Captcha.Width, global.Captcha.Length, global.Captcha.MaxSkew, global.Captcha.DotCount)
 	// 生成base64图片
@@ -64,12 +65,13 @@ func GetCaptcha() (string, string) {
 	// 获取
 	id, b64s, err := c.Generate()
 	if err != nil {
-		fmt.Println("Register GetCaptchaPhoto get base64Captcha has err:", err)
+		loggers.Logs(fmt.Sprintf("Register GetCaptchaPhoto get base64Captcha has err:%v", err))
 		return "", ""
 	}
 	return id, b64s
 }
 
+// Verify 验证是否正确
 func Verify(id string, val string) bool {
 	if id == "" || val == "" {
 		return false

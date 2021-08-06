@@ -41,6 +41,8 @@ func NewDB() (*gorm.DB, error) {
 	}
 
 	sqlDB.SetMaxIdleConns(Mysqls.MaxIdleConns)
+	sqlDB.SetConnMaxIdleTime(Mysqls.ConnMaxIdleTime * time.Second) //连接池空闲的最长时间
+	sqlDB.SetConnMaxLifetime(Mysqls.ConnMaxLifetime * time.Second) //可重用连接的最长时间
 	sqlDB.SetMaxOpenConns(Mysqls.MaxOpenConns)
 	return db, nil
 }
