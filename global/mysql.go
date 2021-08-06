@@ -7,6 +7,7 @@ import (
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
+	"reflect"
 	"time"
 )
 
@@ -30,6 +31,7 @@ func NewDB() (*gorm.DB, error) {
 	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%v&loc=Local",
 		Mysqls.Username, Mysqls.Password, Mysqls.Host, Mysqls.DBName, Mysqls.Charset, Mysqls.ParseTime)
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{Logger: newLogger})
+	db.Callback().Create().Register("gorm:sing", createdTimeForCreateCallback)
 	if err != nil {
 		loggers.Logs("初始化连接数据库失败，错误详情是err:" + fmt.Sprintf("%v\n", err))
 		return nil, err
@@ -45,4 +47,37 @@ func NewDB() (*gorm.DB, error) {
 	sqlDB.SetConnMaxLifetime(Mysqls.ConnMaxLifetime * time.Second) //可重用连接的最长时间
 	sqlDB.SetMaxOpenConns(Mysqls.MaxOpenConns)
 	return db, nil
+}
+
+func createdTimeForCreateCallback(db *gorm.DB) {
+
+	field := db.Statement.Schema.LookUpField("SingTime")
+	_ = field.Set(db.Statement.ReflectValue, time.Now().Format("2006-01-02 15:04:05"))
+
+	if db.Statement.Schema != nil {
+		// 伪代码：裁剪图片并上传至 CDN
+		for _, field := range db.Statement.Schema.Fields {
+			switch db.Statement.ReflectValue.Kind() {
+			case reflect.Slice, reflect.Array:
+				for i := 0; i < db.Statement.ReflectValue.Len(); i++ {
+					// 从字段获取值
+					if fieldValue, isZero := field.ValueOf(db.Statement.ReflectValue.Index(i)); !isZero {
+						fmt.Println(fieldValue)
+					}
+				}
+			case reflect.Struct:
+				// 从字段获取值
+				if fieldValue, isZero := field.ValueOf(db.Statement.ReflectValue); isZero {
+					if crop, ok := fieldValue.(string); ok {
+						fmt.Println(crop)
+					}
+				}
+
+				// 设置字段值
+				_ = field.Set(db.Statement.ReflectValue, "newValue")
+			}
+
+		}
+
+	}
 }

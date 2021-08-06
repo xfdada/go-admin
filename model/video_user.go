@@ -23,7 +23,7 @@ type VideoUser struct {
 	Password    string         `json:"-" gorm:"type:varchar(200)"`
 	Description string         `json:"description" gorm:"type:varchar(200)"`
 	SingIp      string         `json:"sing_ip" gorm:"type:varchar(20)"`
-	CreatedAt   *LocalTime     `json:"created_at" gorm:"type:datetime;column:sing_time;"`
+	SingTime    string         `json:"created_at" gorm:"type:datetime;column:sing_time;"`
 	IsLive      uint8          `json:"is_live" gorm:"type:tinyint(1);default:0"`
 	UpdateAt    *LocalTime     `json:"update_at" gorm:"type:datetime;column:sing_up;"`
 	DeletedAt   gorm.DeletedAt `json:"-" gorm:"index"`

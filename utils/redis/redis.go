@@ -113,20 +113,21 @@ func TTL(key string) (int, error) {
 }
 
 func Del(key string) error {
-	err := Redis.Do("DEL", key).Err()
+	err := Redis.Del(key).Err()
 	if err != nil {
 		loggers.Logs(fmt.Sprint("RedisDel Error! key:", key, "Details:", err.Error()))
+		return err
 	}
-	return err
+	return nil
 }
 
-func RedisHGet(key, field string) (string, error) {
-	value, err := Redis.Do("HGET", key, field).String()
+func HGet(key, field string) (string, error) {
+	v, err := Redis.HGet(key, field).Result()
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 
-	return value, nil
+	return v, nil
 }
 
 func HSet(key, field, value string) error {
